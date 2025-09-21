@@ -1,69 +1,69 @@
-# 😷 Détection de Masque Facial en Temps Réel avec Deep Learning
+# Real-Time Face Mask Detection with Deep Learning
 
-> 🎯 *Objectif : Détecter si une personne porte ou non un masque facial, en direct, via la webcam — en combinant détection de visage et classification d’image avec un réseau de neurones.*
+> *Objective: Detect whether a person is wearing a face mask in real time via webcam — by combining face detection and image classification using a neural network.*
 
-Ce projet implémente un **système complet de détection de masque** :
-1. 🧠 **Entraînement d’un modèle** de classification d’images (avec **MobileNetV2**) sur un dataset de visages *avec* et *sans* masque.
-2. 🎥 **Détection en temps réel** via webcam : localisation du visage + prédiction “Mask” / “No Mask” avec probabilité.
+This project implements a **complete face mask detection system**:
+1. **Model Training**: Image classification model (using **MobileNetV2**) trained on a dataset of faces *with* and *without* masks.
+2. **Real-Time Detection** via webcam: Face localization + prediction of “Mask” / “No Mask” with probability.
 
-Parfait pour des applications de **sécurité sanitaire**, **contrôle d’accès**, ou **projets éducatifs en IA**.
-
----
-
-## 👥 Pour qui est ce projet ?
-
-| Public | Ce qu’il y trouvera |
-|--------|----------------------|
-| 👩‍🎓 **Étudiants en IA / Vision par ordinateur** | Un tutoriel complet, de l’entraînement à la détection en direct, avec code clair et explications. |
-| 👨‍🏫 **Enseignants / Formateurs** | Un support pédagogique idéal pour enseigner le transfert learning, la data augmentation, et l’inférence en temps réel. |
-| 👩‍💻 **Développeurs / Data Scientists** | Une implémentation propre avec TensorFlow/Keras, OpenCV, imutils — facile à adapter, déployer ou améliorer. |
-| 👔 **Curieux / Non-techniciens** | Une démo impressionnante et utile : voyez comment l’IA peut “voir” et “comprendre” ce que vous portez sur le visage ! |
+Ideal for **health safety applications**, **access control systems**, or **educational AI projects**.
 
 ---
 
-## ⚙️ Fonctionnalités Clés
+## Target Audience
 
-### 🧪 1. Entraînement du Modèle (`train_mask_detector.py`)
-- **Dataset** : Images de visages étiquetées “with_mask” / “without_mask”
-- **Modèle de base** : **MobileNetV2** (pré-entraîné sur ImageNet) → léger et rapide
-- **Fine-tuning** : Ajout d’une tête de classification personnalisée :
+| Audience | What They Will Find |
+|----------|----------------------|
+| **Students in AI / Computer Vision** | A complete tutorial, from training to real-time detection, with clear code and explanations. |
+| **Teachers / Trainers** | An ideal pedagogical resource for teaching transfer learning, data augmentation, and real-time inference. |
+| **Developers / Data Scientists** | A clean implementation using TensorFlow/Keras, OpenCV, and imutils — easy to adapt, deploy, or improve. |
+| **Curious Non-Technical Users** | An impressive and practical demo: see how AI can “see” and “understand” what you’re wearing on your face! |
+
+---
+
+## Key Features
+
+### 1. Model Training (`train_mask_detector.py`)
+- **Dataset**: Labeled face images (“with_mask” / “without_mask”)
+- **Base Model**: **MobileNetV2** (pre-trained on ImageNet) → lightweight and fast
+- **Fine-tuning**: Custom classification head added:
   - `AveragePooling2D`
   - `Flatten`
   - `Dense(128, relu)`
   - `Dropout(0.5)`
   - `Dense(2, softmax)`
-- **Data Augmentation** : rotations, zooms, décalages, flips → améliore la généralisation
-- **Optimisation** : Adam, `lr=1e-4`, décroissance du taux d’apprentissage
-- **Métriques** : Accuracy, Loss (train + validation)
-- **Sortie** : Modèle sauvegardé → `mask_detector.model`
+- **Data Augmentation**: Rotations, zooms, shifts, flips → improves generalization
+- **Optimization**: Adam optimizer, `lr=1e-4`, learning rate decay
+- **Metrics**: Accuracy, Loss (training + validation)
+- **Output**: Saved model → `mask_detector.model`
 
-### 🎥 2. Détection en Temps Réel (`detect_mask_video.py`)
-- **Détection de visage** : Modèle **Caffe SSD** (`res10_300x300_ssd_iter_140000.caffemodel`)
-- **Prédiction de masque** : Chargement du modèle entraîné (`mask_detector.model`)
-- **Pipeline en temps réel** :
-  1. Capture vidéo (webcam)
-  2. Détection de tous les visages dans l’image
-  3. Pour chaque visage :
-     - Extraction + redimensionnement (224x224)
-     - Prétraitement (`preprocess_input`)
-     - Prédiction “Mask” / “No Mask” + probabilité
-     - Affichage du label et du cadre coloré (vert = masque, rouge = pas de masque)
-- **Contrôle** : Appuyez sur **‘q’** pour quitter
-
----
-
-## 📊 Résultats Typiques
-
-- ✅ **Précision de validation** : > 95% (selon la qualité du dataset)
-- ⚡ **Vitesse de détection** : 15-30 FPS sur un ordinateur moderne (CPU)
-- 📈 **Courbes d’entraînement** générées (`plot.png`) → suivi de la convergence
+### 2. Real-Time Detection (`detect_mask_video.py`)
+- **Face Detection**: **Caffe SSD model** (`res10_300x300_ssd_iter_140000.caffemodel`)
+- **Mask Prediction**: Load trained model (`mask_detector.model`)
+- **Real-Time Pipeline**:
+  1. Video capture (webcam)
+  2. Detect all faces in frame
+  3. For each face:
+     - Extract and resize to 224x224
+     - Preprocess (`preprocess_input`)
+     - Predict “Mask” / “No Mask” + confidence probability
+     - Display label and colored bounding box (green = mask, red = no mask)
+- **Control**: Press **‘q’** to quit
 
 ---
 
-## 🧩 Technologies & Bibliothèques
+## Typical Results
+
+- **Validation Accuracy**: > 95% (depending on dataset quality)
+- **Detection Speed**: 15–30 FPS on a modern computer (CPU)
+- **Training Curves** generated (`plot.png`) → monitor convergence
+
+---
+
+## Technologies & Libraries
 
 ```python
-# Entraînement
+# Training
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.layers import AveragePooling2D, Dropout, Flatten, Dense
 from tensorflow.keras.optimizers import Adam
@@ -71,7 +71,7 @@ from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
-# Détection
+# Detection
 from tensorflow.keras.models import load_model
 import cv2
 from imutils.video import VideoStream
